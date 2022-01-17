@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Company;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ContactFactory extends Factory
@@ -20,6 +21,7 @@ class ContactFactory extends Factory
             'email'=>$this->faker->email(),
             'phone'=>$this->faker->phoneNumber(),
             'address'=>$this->faker->address(),
+            'user_id'=>User::factory()
             // 'company_id'=>Company::pluck('id')->random()
 
         ];

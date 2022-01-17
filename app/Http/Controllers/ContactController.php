@@ -4,22 +4,36 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use App\Models\Contact;
+use App\Scopes\FilterScope;
+use App\Scopes\SearchScope;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+// use Illuminate\Support\Facades\DB;
 
 class ContactController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware(['auth','verified']);
+    }
     public function index()
     {
-        $companies = Company::orderBy('name')->pluck('name', 'id')->prepend('All Companies', '');
-        $contacts = Contact::latestFirst()->filter()->paginate(10);
+        $user = Auth::user();
+        // Contact::withoutGlobalScope(SearchScope::class)->get();
+        $companies = $user->companies()->orderBy('name')->pluck('name', 'id')->prepend('All Companies', '');
+        // \DB::enableQueryLog();
+        $contacts = $user->contacts()->latestFirst()->paginate(10);
+        // dd(\DB::getQueryLog());
         return view('contacts.index', compact(['contacts', 'companies']));
     }
 
     public function create()
     {
         $contact = new Contact();
-        $companies = Company::orderBy('name')->pluck('name', 'id')->prepend('Select Company', '');
-        return view('contacts.create', compact('companies','contact'));
+        $companies = Auth::user()->companies()->orderBy('name')->pluck('name', 'id')->prepend('Select Company', '');
+        return view('contacts.create', compact('companies', 'contact'));
     }
 
     public function show(Contact $contact)
@@ -37,19 +51,20 @@ class ContactController extends Controller
             'company_id' => 'required|exists:companies,id'
         ]);
 
-        Contact::create($request->all());
+        $request->user()->contacts()->create($request->all());
 
-        return redirect()->route('contacts.index')->with('message','Contact has been added successfully');
+        return redirect()->route('contacts.index')->with('message', 'Contact has been added successfully');
     }
 
     public function edit(Contact $contact)
     {
-        $companies = Company::orderBy('name')->pluck('name', 'id');
-        return view('contacts.edit', compact('companies','contact'));
+        $companies = Auth::user()->companies()->orderBy('name')->pluck('name', 'id');
+        return view('contacts.edit', compact('companies', 'contact'));
     }
-
-    public function update(Request $request, Contact $contact)
+   
+    public function update(Contact $contact,Request $request )
     {
+        // dd($request->company_id);
         $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
@@ -57,15 +72,14 @@ class ContactController extends Controller
             'address' => 'required',
             'company_id' => 'required|exists:companies,id'
         ]);
-
         $contact->update($request->all());
 
-        return redirect()->route('contacts.index')->with('message','Contact has been updated successfully');
+        return redirect()->route('contacts.index')->with('message', 'Contact has been updated successfully');
     }
 
     public function destroy(Contact $contact)
     {
         $contact->delete();
-        return back()->with('message','Contact has been deleted successfully');
+        return back()->with('message', 'Contact has been deleted successfully');
     }
 }
