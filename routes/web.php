@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Settings\AccountController;
 use Illuminate\Support\Facades\Route;
@@ -28,7 +29,9 @@ Route::get('/', function () {
 // Route::delete('/contacts/{contact}]', [ContactController::class, 'destroy'])->name('contacts.destroy');
 
 Route::resources([
-    '/contacts'=>ContactController::class
+    '/contacts'=>ContactController::class,
+    '/companies'=>CompanyController::class,
+
 ]);
 
 

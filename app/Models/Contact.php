@@ -6,6 +6,7 @@ use App\Scopes\ContactFilterScope;
 use App\Scopes\ContactSearchScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Contact extends Model
 {
@@ -36,8 +37,7 @@ class Contact extends Model
     public static function booted()
     {
         static::addGlobalScope(new ContactSearchScope);
-        static::addGlobalScope(new ContactFilterScope);
-        
+        static::addGlobalScope(new ContactFilterScope);        
         
     }
     
