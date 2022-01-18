@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CompanyRequest;
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CompanyController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware(['auth', 'verified']);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +21,9 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        //
+        $companies = Auth::user()->companies()->latest()->paginate(10);
+
+        return view('companies.index', compact('companies'));
     }
 
     /**
@@ -24,7 +33,9 @@ class CompanyController extends Controller
      */
     public function create()
     {
-        //
+        $company = new Company();
+
+        return view('companies.create',compact('company'));
     }
 
     /**
@@ -33,9 +44,11 @@ class CompanyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CompanyRequest $request)
     {
-        //
+        $request->user()->companies()->create($request->all());
+
+        return redirect()->route('companies.index')->with('message', 'Company has been added successfully');
     }
 
     /**
@@ -46,7 +59,7 @@ class CompanyController extends Controller
      */
     public function show(Company $company)
     {
-        //
+        return view('companies.show', compact('company'));
     }
 
     /**
@@ -57,7 +70,7 @@ class CompanyController extends Controller
      */
     public function edit(Company $company)
     {
-        //
+        return view('companies.edit', compact('company'));
     }
 
     /**
@@ -67,9 +80,11 @@ class CompanyController extends Controller
      * @param  \App\Models\Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Company $company)
+    public function update(CompanyRequest $request, Company $company)
     {
-        //
+        $company->update($request->all());
+
+        return redirect()->route('companies.index')->with('message', 'Company has been updated successfully');
     }
 
     /**
@@ -80,6 +95,7 @@ class CompanyController extends Controller
      */
     public function destroy(Company $company)
     {
-        //
+        $company->delete();
+        return redirect()->route('companies.index')->with('message', 'Company has been deleted successfully');
     }
 }

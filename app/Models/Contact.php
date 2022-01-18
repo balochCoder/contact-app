@@ -6,7 +6,7 @@ use App\Scopes\ContactFilterScope;
 use App\Scopes\ContactSearchScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
+
 
 class Contact extends Model
 {
@@ -14,9 +14,7 @@ class Contact extends Model
 
     protected $fillable = ['first_name', 'last_name', 'email', 'phone', 'address','company_id','user_id'];
 
-    public $searchColumns = ['first_name', 'last_name', 'email','company.name'];
-    public $filterColumns = ['company_id'];
-
+   
     public function company()
     {
         return $this->belongsTo(Company::class);
