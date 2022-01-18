@@ -32,9 +32,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (Session::has('message'))
-                                        <div class="alert alert-success"> {{ Session::get('message') }}</div>
-                                    @endif
+                                    @include('layouts._message')
                                     @if ($companies->count() > 0)
                                         @foreach ($companies as $index => $company)
                                             <tr>

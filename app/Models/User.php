@@ -18,9 +18,13 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
+        'bio',
+        'company',
+        'profile_picture'
     ];
 
     /**
@@ -50,5 +54,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function companies()
     {
         return $this->hasMany(Company::class);
+    }
+
+    public function fullName()
+    {
+        return $this->first_name . " " . $this->last_name;
     }
 }
