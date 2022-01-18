@@ -42,7 +42,7 @@
                                                 <td>{{ $company->name }}</td>
                                                 <td>{{ $company->website }}</td>
                                                 <td>{{ $company->email }}</td>
-                                                <td>{{$company->contacts->count()}}</td>
+                                                <td>{{$company->contacts_count}}</td>
                                                 <td width="150">
                                                     <a href="{{ route('companies.show', $company->id) }}"
                                                         class="btn btn-sm btn-circle btn-outline-info" title="Show"><i
