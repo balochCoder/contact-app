@@ -61,7 +61,7 @@
                             </table>
 
                             {{-- {{ $contacts->appends(request()->only('company_id'))->links() }} --}}
-                            {{ $companies->links() }}
+                            {{ $companies->withQueryString()->links() }}
 
                             
 

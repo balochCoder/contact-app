@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Scopes\CompanySearchScope;
+use App\Scopes\ContactSearchScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +16,7 @@ class Company extends Model
 
     public function contacts()
     {
-        return $this->hasMany(Contact::class);
+        return $this->hasMany(Contact::class)->withoutGlobalScope(ContactSearchScope::class);
     }
 
     public function user()
@@ -25,7 +26,7 @@ class Company extends Model
 
     public static function userCompanies()
     {
-        return self::where('user_id',Auth::id())->orderBy('name')->pluck('name', 'id')->prepend('All Companies', '');
+        return self::withoutGlobalScopes()->where('user_id',Auth::id())->orderBy('name')->pluck('name', 'id')->prepend('All Companies', '');
     }
 
     public static function booted()
